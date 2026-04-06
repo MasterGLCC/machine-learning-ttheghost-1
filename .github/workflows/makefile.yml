@@ -21,4 +21,4 @@ jobs:
       run: make
 
     - name: Run linear regression
-      run: ./linear_regression.exe
+      run: ./linear_regression
