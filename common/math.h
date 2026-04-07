@@ -61,6 +61,8 @@ Table table_min_axis0(const Table *X);
 
 Table table_max_axis0(const Table *X);
 
+// x' = (x - μ) / σ
 void table_normlize_zscore_axis0(Table *X, const Table *mean, const Table *stddev);
 
+// x = (x' * σ) + μ
 void table_denormalize_zscore_axis0(Table *X, const Table *mean, const Table *stddev);
