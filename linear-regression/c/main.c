@@ -1,6 +1,7 @@
 #include "common/math.h"
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
 
 typedef struct {
     f32 a;
