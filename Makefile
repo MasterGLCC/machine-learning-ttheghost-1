@@ -19,7 +19,7 @@ COMMON_DIR = common
 LR_DIR = linear-regression/c
 MLR_DIR = multiple-linear-regression/c
 
-COMMON_SRC = $(COMMON_DIR)/math.c $(COMMON_DIR)/csv.c
+COMMON_SRC = $(COMMON_DIR)/math.c $(COMMON_DIR)/csv.c $(COMMON_DIR)/matrix.c
 LR_SRC = $(LR_DIR)/main.c
 MLR_SRC = $(MLR_DIR)/main.c
 

@@ -4,15 +4,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Lecture d'un fichier CSV et stockage dans une Table
+// On fait 2 passes : la 1ere pour compter lignes/colonnes, la 2eme pour remplir
 Table table_load_csv(const char *filename, int skip_header) {
   FILE *fp = fopen(filename, "r");
   if (!fp) {
-    fprintf(stderr, "ERROR: Cannot open '%s'\n", filename);
+    fprintf(stderr, "ERREUR: impossible d'ouvrir '%s'\n", filename);
     exit(EXIT_FAILURE);
   }
 
   char line[8192];
   uint rows = 0, cols = 0;
+
+  // 1ere passe : on compte les lignes et on detecte le nb de colonnes
   while (fgets(line, sizeof(line), fp)) {
     if (skip_header && rows == 0) {
       rows++;
@@ -29,6 +33,7 @@ Table table_load_csv(const char *filename, int skip_header) {
   }
   uint data_rows = skip_header ? rows - 1 : rows;
 
+  // 2eme passe : on remplit la table avec les valeurs
   Table t = init_table(data_rows, cols);
   rewind(fp);
 
@@ -48,6 +53,6 @@ Table table_load_csv(const char *filename, int skip_header) {
     row_idx++;
   }
   fclose(fp);
-  printf("Loaded '%s': %d rows x %d cols\n", filename, data_rows, cols);
+  printf("Chargé '%s': %d lignes x %d colonnes\n", filename, data_rows, cols);
   return t;
 }
