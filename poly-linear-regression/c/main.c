@@ -1,6 +1,6 @@
+#include <common/csv.h>
 #include <common/math.h>
 #include <math.h>
-#include <string.h>
 #include <stdio.h>
 
 // Regression polynomiale de degre 2 : ŷ = w₀ + w₁·x + w₂·x²
@@ -9,30 +9,16 @@ typedef struct {
 } PolyRegression;
 
 // Construction de la matrice de design polynomiale (degre 2)
-// On normalise x d'abord : x' = (x - μ) / σ
+// X doit etre deja normalise (z-score)
 // Colonnes resultantes : [1, x', x'²]
-Table build_poly2_design(const Table *X, f32 *mean_x, f32 *std_x) {
+Table build_poly2_design(const Table *X) {
   Table X_poly = init_table(X->rows, 3);
-
-  // Calcul de la moyenne et de l'ecart-type de x
-  f32 sum = 0.0f, sum_sq = 0.0f;
-  for (uint i = 0; i < X->rows; i++) {
-    f32 x = table_get(X, i, 0);
-    sum += x;
-    sum_sq += x * x;
-  }
-  *mean_x = sum / X->rows;
-  // σ = √( E[x²] - (E[x])² )
-  *std_x = sqrtf(sum_sq / X->rows - (*mean_x) * (*mean_x));
-  if (*std_x < 1e-8f)
-    *std_x = 1.0f;
-
   // Remplissage : colonne 0 = 1 (biais), colonne 1 = x', colonne 2 = x'²
   for (uint i = 0; i < X->rows; i++) {
-    f32 x_norm = (table_get(X, i, 0) - *mean_x) / *std_x;
+    f32 x = table_get(X, i, 0);
     table_set(&X_poly, i, 0, 1.0f);
-    table_set(&X_poly, i, 1, x_norm);
-    table_set(&X_poly, i, 2, x_norm * x_norm);
+    table_set(&X_poly, i, 1, x);
+    table_set(&X_poly, i, 2, x * x);
   }
   return X_poly;
 }
@@ -99,32 +85,22 @@ f32 poly_predict(const PolyRegression *model, f32 x_orig, f32 mean_x,
 }
 
 int main() {
-  // Donnees quadratiques : y = 2 + 3x - 0.5x²
-  uint n_samples = 7;
-  Table X = init_table(n_samples, 1);
-  Table Y = init_table(n_samples, 1);
+  // Chargement du dataset taille/poids
+  Table c = table_load_csv("datasets/SOCR-HeightWeight.csv", 1);
 
-  f32 x_vals[] = {-2.0f, -1.0f, 0.0f, 1.0f, 2.0f, 3.0f, 4.0f};
-  f32 y_vals[] = {
-      2 + 3 * (-2) - 0.5 * 4, 2 + 3 * (-1) - 0.5 * 1, 2,
-      2 + 3 * 1 - 0.5 * 1,    2 + 3 * 2 - 0.5 * 4,    2 + 3 * 3 - 0.5 * 9,
-      2 + 3 * 4 - 0.5 * 16};
+  // Normalisation z-score pour stabiliser la descente de gradient
+  Table mean = table_mean_axis0(&c);
+  Table stddev = table_stddev_axis0(&c, &mean);
+  table_normlize_zscore_axis0(&c, &mean, &stddev);
 
-  memcpy(X.data, x_vals, sizeof(x_vals));
-  memcpy(Y.data, y_vals, sizeof(y_vals));
+  // X = taille (colonne 1), Y = poids (colonne 2) -- deja normalises
+  Table X = table_extract_column(&c, 1);
+  Table Y = table_extract_column(&c, 2);
 
-  // Construction de la matrice de design polynomiale (avec normalisation)
-  f32 mean_x, std_x;
-  Table X_poly = build_poly2_design(&X, &mean_x, &std_x);
+  // Construction de la matrice de design polynomiale [1, x', x'²]
+  Table X_poly = build_poly2_design(&X);
 
-  printf("Donnees normalisees: mean=%.3f, std=%.3f\n", mean_x, std_x);
-  printf("Matrice de design (3 premieres lignes):\n");
-  for (uint i = 0; i < 3 && i < n_samples; i++) {
-    printf("  [1, %.3f, %.3f] -> y=%.3f\n", table_get(&X_poly, i, 1),
-           table_get(&X_poly, i, 2), table_get(&Y, i, 0));
-  }
-
-  // Entraînement par descente de gradient
+  // Entrainement par descente de gradient
   PolyRegression model = {0.0f, 0.0f, 0.0f};
   poly_gradient_descent(&model, &X_poly, &Y, 0.1f, 5000);
 
@@ -134,28 +110,42 @@ int main() {
   printf("  w1 (coeff x')     = %f\n", model.w1);
   printf("  w2 (coeff x'^2)   = %f\n", model.w2);
 
-  // Reconversion vers les coefficients du polynôme original y = c₀ + c₁x + c₂x²
-  // En developpant : ŷ = w₀ + w₁·(x-μ)/σ + w₂·((x-μ)/σ)²
-  // On obtient :
-  //   c₂ = w₂ / σ²
-  //   c₁ = w₁/σ - 2·w₂·μ/σ²
-  //   c₀ = w₀ - w₁·μ/σ + w₂·μ²/σ²
-  f32 c2 = model.w2 / (std_x * std_x);
-  f32 c1 = model.w1 / std_x - 2.0f * model.w2 * mean_x / (std_x * std_x);
-  f32 c0 = model.w0 - model.w1 * mean_x / std_x +
-           model.w2 * mean_x * mean_x / (std_x * std_x);
+  f32 mean_x = table_get(&mean, 0, 1);
+  f32 mean_y = table_get(&mean, 0, 2);
+  f32 std_x = table_get(&stddev, 0, 1);
+  f32 std_y = table_get(&stddev, 0, 2);
+
+  // Reconversion vers l'echelle originale y = c₀ + c₁x + c₂x²
+  // Le modele predit y' (normalise), donc y_orig = y'·σ_y + μ_y
+  // Et x' = (x - μ_x) / σ_x
+  // En combinant : y_orig = σ_y·(w₀ + w₁·x' + w₂·x'²) + μ_y
+  // En developpant sur x original :
+  //   c₂ = σ_y · w₂ / σ_x²
+  //   c₁ = σ_y · (w₁/σ_x - 2·w₂·μ_x/σ_x²)
+  //   c₀ = σ_y · (w₀ - w₁·μ_x/σ_x + w₂·μ_x²/σ_x²) + μ_y
+  f32 c2 = std_y * model.w2 / (std_x * std_x);
+  f32 c1 =
+      std_y * (model.w1 / std_x - 2.0f * model.w2 * mean_x / (std_x * std_x));
+  f32 c0 = std_y * (model.w0 - model.w1 * mean_x / std_x +
+                    model.w2 * mean_x * mean_x / (std_x * std_x)) +
+           mean_y;
 
   printf("\nPolynome original: y = %.4f + %.4f x + %.4f x^2\n", c0, c1, c2);
 
-  // Prediction pour un nouveau x
-  f32 new_x = 2.5f;
-  f32 pred = poly_predict(&model, new_x, mean_x, std_x);
-  printf("Prediction pour x=%.2f: %.4f\n", new_x, pred);
+  // Prediction pour un nouveau x (dans l'echelle originale)
+  f32 new_x = 68.0f; // taille en pouces
+  f32 x_norm = (new_x - mean_x) / std_x;
+  f32 pred_norm = model.w0 + model.w1 * x_norm + model.w2 * (x_norm * x_norm);
+  f32 pred_orig = pred_norm * std_y + mean_y;
+  printf("Prediction pour taille=%.1f pouces: poids=%.2f lbs\n", new_x, pred_orig);
 
   // Nettoyage
   free_table(&X);
   free_table(&Y);
   free_table(&X_poly);
+  free_table(&mean);
+  free_table(&stddev);
+  free_table(&c);
 
   return 0;
 }
