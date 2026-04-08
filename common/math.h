@@ -3,8 +3,7 @@
 typedef unsigned int uint;
 typedef float f32;
 
-typedef struct
-{
+typedef struct {
   f32 *data;
   uint rows;
   uint cols;
@@ -28,11 +27,11 @@ static inline void table_set(Table *t, uint row, uint col, f32 val) {
 }
 
 static inline f32 table_flat_get(const Table *t, uint idx) {
-    return t->data[idx];
+  return t->data[idx];
 }
 
 static inline void table_flat_set(Table *t, uint idx, f32 val) {
-    t->data[idx] = val;
+  t->data[idx] = val;
 }
 
 Table table_copy(const Table *src);
@@ -62,7 +61,9 @@ Table table_min_axis0(const Table *X);
 Table table_max_axis0(const Table *X);
 
 // x' = (x - μ) / σ
-void table_normlize_zscore_axis0(Table *X, const Table *mean, const Table *stddev);
+void table_normlize_zscore_axis0(Table *X, const Table *mean,
+                                 const Table *stddev);
 
 // x = (x' * σ) + μ
-void table_denormalize_zscore_axis0(Table *X, const Table *mean, const Table *stddev);
+void table_denormalize_zscore_axis0(Table *X, const Table *mean,
+                                    const Table *stddev);
