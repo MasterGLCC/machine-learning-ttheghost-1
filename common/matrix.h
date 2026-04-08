@@ -1,7 +1,7 @@
 #pragma once
 #include "math.h"
 
-// Transposée : Aᵀ
+// Transposee : Aᵀ
 Table matrix_transpose(const Table *A);
 
 // Produit matriciel : C = A · B  (A: n×m, B: m×p → C: n×p)

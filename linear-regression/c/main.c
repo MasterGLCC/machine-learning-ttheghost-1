@@ -6,18 +6,18 @@
 #include <stdio.h>
 #include <string.h>
 
-// Régression linéaire simple : y = a·x + b
+// Regression lineaire simple : y = a·x + b
 typedef struct {
   f32 a;
   f32 b;
 } LinearRegression;
 
-// Prédiction pour une seule valeur : ŷ = a·x + b
+// Prediction pour une seule valeur : ŷ = a·x + b
 inline f32 predict(const LinearRegression *model, f32 x) {
   return model->a * x + model->b;
 }
 
-// Prédiction sur tout le dataset (colonne par colonne)
+// Prediction sur tout le dataset (colonne par colonne)
 inline Table batch_predict(const LinearRegression *model, const Table *X) {
   Table res = init_table(X->rows, 1);
   for (uint i = 0; i < X->rows; i++) {
@@ -51,12 +51,12 @@ void univariate_gradient_descent(LinearRegression *model, const Table *X,
       mse += error * error;
     }
 
-    // Gradients moyennés sur n échantillons
+    // Gradients moyennes sur n echantillons
     f32 dA = sum_a / X->rows;
     f32 dB = sum_b / X->rows;
     f32 current_loss = (1.0 / (2.0 * X->rows)) * mse;
 
-    // Mise à jour des paramètres : θ = θ - α · ∂J/∂θ
+    // Mise a jour des paramètres : θ = θ - α · ∂J/∂θ
     model->a -= lr * dA;
     model->b -= lr * dB;
 
@@ -65,11 +65,11 @@ void univariate_gradient_descent(LinearRegression *model, const Table *X,
     }
     // Critère d'arrêt : convergence si la perte ne bouge presque plus
     if (fabsf(last_loss - current_loss) < 1e-7f) {
-      printf("Convergence à l'itération %u\n", iter);
+      printf("Convergence a l'iteration %u\n", iter);
       break;
     }
     if (isnan(current_loss) || isinf(current_loss)) {
-        printf("Erreur numérique détectée\n");
+        printf("Erreur numerique detectee\n");
     }
     last_loss = current_loss;
   }
@@ -95,14 +95,14 @@ int main() {
   f32 stddev_x = table_get(&stddev, 0, 1);
   f32 stddev_y = table_get(&stddev, 0, 2);
 
-  // Reconversion des paramètres normalisés vers l'échelle d'origine
+  // Reconversion des paramètres normalises vers l'echelle d'origine
   // a_orig = (σ_y / σ_x) · a_norm
   // b_orig = μ_y - a_orig · μ_x + σ_y · b_norm
   f32 a_orig = (stddev_y / stddev_x) * model.a;
   f32 b_orig = mean_y - a_orig * mean_x + stddev_y * model.b;
 
-  printf("Normalisé: a = %f, b = %f\n", model.a, model.b);
-  printf("Échelle originale: a = %f, b = %f\n", a_orig, b_orig);
+  printf("Normalise: a = %f, b = %f\n", model.a, model.b);
+  printf("echelle originale: a = %f, b = %f\n", a_orig, b_orig);
 
   free_table(&X);
   free_table(&Y);

@@ -53,6 +53,6 @@ Table table_load_csv(const char *filename, int skip_header) {
     row_idx++;
   }
   fclose(fp);
-  printf("Chargé '%s': %d lignes x %d colonnes\n", filename, data_rows, cols);
+  printf("Charge '%s': %d lignes x %d colonnes\n", filename, data_rows, cols);
   return t;
 }

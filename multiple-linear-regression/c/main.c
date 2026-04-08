@@ -5,13 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Régression linéaire multiple : ŷ = Xw
-// On utilise l'équation normale pour trouver w
+// Regression lineaire multiple : ŷ = Xw
+// On utilise l'equation normale pour trouver w
 typedef struct {
   Table weights;
 } LinearRegression;
 
-// Ajoute une colonne de 1 au début de X pour le terme d'ordonnée à l'origine
+// Ajoute une colonne de 1 au debut de X pour le terme d'ordonnee a l'origine
 // (biais) X_features (n×m) → X_design (n×(m+1)) avec la premiere colonne = 1
 Table add_intercept_column(const Table *X_features) {
   Table X = init_table(X_features->rows, X_features->cols + 1);
@@ -24,7 +24,7 @@ Table add_intercept_column(const Table *X_features) {
   return X;
 }
 
-// Entraînement par l'équation normale (solution analytique)
+// Entraînement par l'equation normale (solution analytique)
 // w = (XᵀX)⁻¹ · Xᵀy
 void linear_regression_fit(LinearRegression *model, const Table *X_features,
                            const Table *Y) {
@@ -48,7 +48,7 @@ void linear_regression_fit(LinearRegression *model, const Table *X_features,
   // Inversion de (XᵀX)
   Table XtX_inv = matrix_inverse(&XtX);
 
-  // Résultat : w = (XᵀX)⁻¹ · Xᵀy   → vecteur (m+1) × 1
+  // Resultat : w = (XᵀX)⁻¹ · Xᵀy   → vecteur (m+1) × 1
   Table W = matrix_multiply(&XtX_inv, &XtY);
 
   model->weights = W;
@@ -60,7 +60,7 @@ void linear_regression_fit(LinearRegression *model, const Table *X_features,
   free_table(&XtX_inv);
 }
 
-// Prédiction : ŷ = X_design · w
+// Prediction : ŷ = X_design · w
 Table linear_regression_predict(const LinearRegression *model,
                                 const Table *X_features) {
   Table X_design = add_intercept_column(X_features);
@@ -78,7 +78,7 @@ void linear_regression_free(LinearRegression *model) {
 }
 
 int main() {
-  // Exemple : prédire le prix d'une maison à partir de la surface et nb de
+  // Exemple : predire le prix d'une maison a partir de la surface et nb de
   // chambres
   Table X_features = init_table(5, 2);
   f32 X_data[] = {650, 1, // surface (sqft), chambres
@@ -89,23 +89,23 @@ int main() {
   f32 Y_data[] = {130000, 160000, 195000, 230000, 280000};
   memcpy(Y.data, Y_data, sizeof(Y_data));
 
-  // Entraînement via équation normale
+  // Entraînement via equation normale
   LinearRegression model = {0};
   linear_regression_fit(&model, &X_features, &Y);
 
-  // Affichage des poids trouvés
+  // Affichage des poids trouves
   printf("Intercept (biais):    %f\n", table_get(&model.weights, 0, 0));
   printf("Coefficient surface:  %f\n", table_get(&model.weights, 1, 0));
   printf("Coefficient chambres: %f\n", table_get(&model.weights, 2, 0));
 
-  // Prédiction pour une nouvelle maison : 1000 sqft, 3 chambres
+  // Prediction pour une nouvelle maison : 1000 sqft, 3 chambres
   Table X_new = init_table(1, 2);
   table_set(&X_new, 0, 0, 1000);
   table_set(&X_new, 0, 1, 3);
   Table Y_new = linear_regression_predict(&model, &X_new);
-  printf("Prix prédit: %f\n", table_get(&Y_new, 0, 0));
+  printf("Prix predit: %f\n", table_get(&Y_new, 0, 0));
 
-  // Nettoyage mémoire
+  // Nettoyage memoire
   free_table(&X_features);
   free_table(&Y);
   free_table(&X_new);

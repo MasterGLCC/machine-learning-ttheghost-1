@@ -10,7 +10,7 @@ Table init_table(uint rows, uint cols) {
   tab.cols = cols;
   tab.data = calloc(rows * cols, sizeof(f32));
   if (!tab.data) {
-    fprintf(stderr, "ERREUR: init_table(%d, %d) - mémoire insuffisante\n", rows, cols);
+    fprintf(stderr, "ERREUR: init_table(%d, %d) - memoire insuffisante\n", rows, cols);
     exit(EXIT_FAILURE);
   }
   return tab;
@@ -22,7 +22,7 @@ Table init_table_with(uint rows, uint cols, f32 val) {
   tab.cols = cols;
   tab.data = malloc(rows * cols * sizeof(f32));
   if (!tab.data) {
-    fprintf(stderr, "ERREUR: init_table_with(%d, %d, %f) - mémoire insuffisante\n",
+    fprintf(stderr, "ERREUR: init_table_with(%d, %d, %f) - memoire insuffisante\n",
             rows, cols, val);
     exit(EXIT_FAILURE);
   }
@@ -32,7 +32,7 @@ Table init_table_with(uint rows, uint cols, f32 val) {
   return tab;
 }
 
-// Libère la mémoire et remet tout à 0 pour éviter les use-after-free
+// Libère la memoire et remet tout a 0 pour eviter les use-after-free
 void free_table(Table *tab) {
   if (tab && tab->data) {
     free(tab->data);
@@ -128,7 +128,7 @@ Table table_mean_axis1(const Table *X) {
   return mean;
 }
 
-// Écart-type par colonne : σⱼ = √( (1/n) Σᵢ (xᵢⱼ - μⱼ)² )
+// ecart-type par colonne : σⱼ = √( (1/n) Σᵢ (xᵢⱼ - μⱼ)² )
 Table table_stddev_axis0(const Table *X, const Table *mean) {
   Table sd = init_table(1, X->cols);
   for (uint j = 0; j < X->cols; j++) {
@@ -142,7 +142,7 @@ Table table_stddev_axis0(const Table *X, const Table *mean) {
   return sd;
 }
 
-// Écart-type par ligne
+// ecart-type par ligne
 Table table_stddev_axis1(const Table *X, const Table *mean) {
   Table sd = init_table(X->rows, 1);
   for (uint i = 0; i < X->rows; i++) {
@@ -189,7 +189,7 @@ Table table_max_axis0(const Table *X) {
 }
 
 // Normalisation z-score colonne par colonne
-// Formule : x' = (x - μ) / σ  (on ajoute eps pour éviter la division par 0)
+// Formule : x' = (x - μ) / σ  (on ajoute eps pour eviter la division par 0)
 void table_normlize_zscore_axis0(Table *X, const Table *mean,
                                  const Table *stddev) {
   const f32 eps = 1e-8f;
@@ -203,7 +203,7 @@ void table_normlize_zscore_axis0(Table *X, const Table *mean,
   }
 }
 
-// Dénormalisation : opération inverse du z-score
+// Denormalisation : operation inverse du z-score
 // Formule : x = x' · σ + μ
 void table_denormalize_zscore_axis0(Table *X, const Table *mean,
                                     const Table *stddev) {

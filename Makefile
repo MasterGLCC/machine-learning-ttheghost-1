@@ -18,16 +18,19 @@ endif
 COMMON_DIR = common
 LR_DIR = linear-regression/c
 MLR_DIR = multiple-linear-regression/c
+POLY_LR_DIR = poly-linear-regression/c
 
 COMMON_SRC = $(COMMON_DIR)/math.c $(COMMON_DIR)/csv.c $(COMMON_DIR)/matrix.c
 LR_SRC = $(LR_DIR)/main.c
 MLR_SRC = $(MLR_DIR)/main.c
+POLY_LR_SRC = $(POLY_LR_DIR)/main.c
 
 LR_TARGET = linear_regression$(EXT)
 MLR_TARGET = multiple_linear_regression$(EXT)
+POLY_LR_TARGET = poly_linear_regression$(EXT)
 
 # Default rule
-all: $(LR_TARGET) $(MLR_TARGET)
+all: $(LR_TARGET) $(MLR_TARGET) $(POLY_LR_TARGET)
 
 $(LR_TARGET):
 	$(CC) $(CFLAGS) $(COMMON_SRC) $(LR_SRC) -o $(LR_TARGET) $(LDFLAGS)
@@ -35,14 +38,20 @@ $(LR_TARGET):
 $(MLR_TARGET):
 	$(CC) $(CFLAGS) $(COMMON_SRC) $(MLR_SRC) -o $(MLR_TARGET) $(LDFLAGS)
 
+$(POLY_LR_TARGET):
+	$(CC) $(CFLAGS) $(COMMON_SRC) $(POLY_LR_SRC) -o $(POLY_LR_TARGET) $(LDFLAGS)
+
 # Run
-run: run_lr run_mlr
+run: run_lr run_mlr run_plr
 
 run_lr: $(LR_TARGET)
 	./$(LR_TARGET)
 
 run_mlr: $(MLR_TARGET)
 	./$(MLR_TARGET)
+
+run_plr: $(POLY_LR_TARGET)
+	./$(POLY_LR_TARGET)
 
 clean:
 	del /Q *.exe 2>nul

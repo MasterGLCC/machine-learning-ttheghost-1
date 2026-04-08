@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Transposée : on échange lignes et colonnes, res[j][i] = A[i][j]
+// Transposee : on echange lignes et colonnes, res[j][i] = A[i][j]
 Table matrix_transpose(const Table *A) {
   Table res = init_table(A->cols, A->rows);
   for (uint i = 0; i < A->rows; i++) {
@@ -34,26 +34,26 @@ Table matrix_multiply(const Table *A, const Table *B) {
   return C;
 }
 
-// Inversion par élimination de Gauss-Jordan avec pivot partiel
-// On construit la matrice augmentée [A | I] puis on réduit pour obtenir [I |
+// Inversion par elimination de Gauss-Jordan avec pivot partiel
+// On construit la matrice augmentee [A | I] puis on reduit pour obtenir [I |
 // A⁻¹]
 Table matrix_inverse(const Table *A) {
   if (A->rows != A->cols) {
-    fprintf(stderr, "L'inverse n'existe que pour les matrices carrées\n");
+    fprintf(stderr, "L'inverse n'existe que pour les matrices carrees\n");
     exit(EXIT_FAILURE);
   }
   uint n = A->rows;
 
-  // Matrice augmentée [A | I] de taille n × 2n
+  // Matrice augmentee [A | I] de taille n × 2n
   Table aug = init_table(n, 2 * n);
   for (uint i = 0; i < n; i++) {
     for (uint j = 0; j < n; j++) {
       table_set(&aug, i, j, table_get(A, i, j));
     }
-    table_set(&aug, i, n + i, 1.0f); // identité à droite
+    table_set(&aug, i, n + i, 1.0f); // identite a droite
   }
 
-  // Élimination de Gauss-Jordan
+  // elimination de Gauss-Jordan
   for (uint col = 0; col < n; col++) {
     // Recherche du pivot partiel (plus grande valeur absolue dans la colonne)
     uint pivot = col;
@@ -70,7 +70,7 @@ Table matrix_inverse(const Table *A) {
       exit(EXIT_FAILURE);
     }
 
-    // Échange de lignes si le pivot n'est pas sur la diagonale
+    // echange de lignes si le pivot n'est pas sur la diagonale
     if (pivot != col) {
       for (uint j = 0; j < 2 * n; j++) {
         f32 tmp = table_get(&aug, col, j);
@@ -79,13 +79,13 @@ Table matrix_inverse(const Table *A) {
       }
     }
 
-    // On divise la ligne pivot pour que l'élément diagonal = 1
+    // On divise la ligne pivot pour que l'element diagonal = 1
     f32 pivot_val = table_get(&aug, col, col);
     for (uint j = 0; j < 2 * n; j++) {
       table_set(&aug, col, j, table_get(&aug, col, j) / pivot_val);
     }
 
-    // Élimination sur les autres lignes
+    // elimination sur les autres lignes
     for (uint row = 0; row < n; row++) {
       if (row != col) {
         f32 factor = table_get(&aug, row, col);
@@ -100,7 +100,7 @@ Table matrix_inverse(const Table *A) {
     }
   }
 
-  // On récupère A⁻¹ dans la partie droite de la matrice augmentée
+  // On recupère A⁻¹ dans la partie droite de la matrice augmentee
   Table inv = init_table(n, n);
   for (uint i = 0; i < n; i++) {
     for (uint j = 0; j < n; j++) {
