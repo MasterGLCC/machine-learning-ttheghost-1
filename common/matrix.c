@@ -22,13 +22,19 @@ Table matrix_multiply(const Table *A, const Table *B) {
     exit(EXIT_FAILURE);
   }
   Table C = init_table(A->rows, B->cols);
-  for (uint i = 0; i < A->rows; i++) {
-    for (uint j = 0; j < B->cols; j++) {
-      f32 sum = 0.0f;
-      for (uint k = 0; k < A->cols; k++) {
-        sum += table_get(A, i, k) * table_get(B, k, j);
+  const uint N = A->rows;
+  const uint K = A->cols;
+  const uint M = B->cols;
+
+  for (uint i = 0; i < N; i++) {
+    f32 *restrict C_row = C.data + i * M;
+    const f32 *restrict A_row = A->data + i * K;
+    for (uint k = 0; k < K; k++) {
+      f32 a_ik = A_row[k];
+      const f32 *restrict B_row = B->data + k * M;
+      for (uint j = 0; j < M; j++) {
+        C_row[j] += a_ik * B_row[j];
       }
-      table_set(&C, i, j, sum);
     }
   }
   return C;
