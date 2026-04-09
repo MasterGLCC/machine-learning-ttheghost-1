@@ -22,14 +22,14 @@ Chaque methode de regression est implementee de deux manieres :
 ├── datasets/
 │   └── SOCR-HeightWeight.csv
 ├── linear-regression/
-│   ├── c/main.c                # descente de gradient univariee
-│   └── python/                 # notebooks jupyter
+│   ├── from-scratch/main.c                # descente de gradient univariee
+│   └── with-lib/                          # notebooks jupyter
 ├── multiple-linear-regression/
-│   ├── c/main.c                # equation normale (XᵀX)⁻¹Xᵀy
-│   └── python/
+│   ├── from-scratch/main.c                # equation normale (XᵀX)⁻¹Xᵀy
+│   └── with-lib/
 ├── poly-linear-regression/
-│   ├── c/main.c                # regression polynomiale degre 2
-│   └── python/
+│   ├── from-scratch/main.c                # regression polynomiale degre 2
+│   └── with-lib/
 └── Makefile
 ```
 

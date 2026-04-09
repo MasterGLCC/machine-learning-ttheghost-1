@@ -16,9 +16,9 @@ else
 endif
 
 COMMON_DIR = common
-LR_DIR = linear-regression/c
-MLR_DIR = multiple-linear-regression/c
-POLY_LR_DIR = poly-linear-regression/c
+LR_DIR = linear-regression/from-scratch
+MLR_DIR = multiple-linear-regression/from-scratch
+POLY_LR_DIR = poly-linear-regression/from-scratch
 
 COMMON_SRC = $(COMMON_DIR)/math.c $(COMMON_DIR)/csv.c $(COMMON_DIR)/matrix.c
 LR_SRC = $(LR_DIR)/main.c
