@@ -49,23 +49,33 @@ Table matrix_inverse(const Table *A) {
     exit(EXIT_FAILURE);
   }
   uint n = A->rows;
+  uint n2 = 2 * n;
 
   // Matrice augmentee [A | I] de taille n × 2n
   Table aug = init_table(n, 2 * n);
+  f32 *restrict aug_data = aug.data;
+  const f32 *restrict A_data = A->data;
+
+  // Remplissage de la matrice augmentee : A a gauche, I a droite
   for (uint i = 0; i < n; i++) {
-    for (uint j = 0; j < n; j++) {
-      table_set(&aug, i, j, table_get(A, i, j));
-    }
-    table_set(&aug, i, n + i, 1.0f); // identite a droite
+    f32 *row = aug_data + i * n2;
+    const f32 *A_row = A_data + i * n;
+    // Copier la partie A de la matrice augmentee
+    for (uint j = 0; j < n; j++)
+      row[j] = A_row[j];
+    // la partie identite a droite
+    for (uint j = n; j < n2; j++)
+      row[j] = 0.0f;
+    row[n + i] = 1.0f;
   }
 
   // elimination de Gauss-Jordan
   for (uint col = 0; col < n; col++) {
     // Recherche du pivot partiel (plus grande valeur absolue dans la colonne)
     uint pivot = col;
-    f32 max_val = fabsf(table_get(&aug, col, col));
+      f32 max_val = fabsf(aug_data[col * n2 + col]);
     for (uint row = col + 1; row < n; row++) {
-      f32 val = fabsf(table_get(&aug, row, col));
+      f32 val = fabsf(aug_data[row * n2 + col]);
       if (val > max_val) {
         max_val = val;
         pivot = row;
@@ -78,41 +88,46 @@ Table matrix_inverse(const Table *A) {
 
     // echange de lignes si le pivot n'est pas sur la diagonale
     if (pivot != col) {
-      for (uint j = 0; j < 2 * n; j++) {
-        f32 tmp = table_get(&aug, col, j);
-        table_set(&aug, col, j, table_get(&aug, pivot, j));
-        table_set(&aug, pivot, j, tmp);
+      f32 *row_col = aug_data + col * n2;
+      f32 *row_piv = aug_data + pivot * n2;
+      for (uint j = 0; j < n2; j++) {
+        f32 tmp = row_col[j];
+        row_col[j] = row_piv[j];
+        row_piv[j] = tmp;
       }
     }
 
     // On divise la ligne pivot pour que l'element diagonal = 1
-    f32 pivot_val = table_get(&aug, col, col);
+    f32 *pivot_row = aug_data + col * n2;
+    f32 inv_pivot = 1.0f / pivot_row[col];
     for (uint j = 0; j < 2 * n; j++) {
-      table_set(&aug, col, j, table_get(&aug, col, j) / pivot_val);
+      pivot_row[j] *= inv_pivot;
     }
 
     // elimination sur les autres lignes
     for (uint row = 0; row < n; row++) {
-      if (row != col) {
-        f32 factor = table_get(&aug, row, col);
-        if (fabsf(factor) < 1e-12f)
-          continue;
-        for (uint j = 0; j < 2 * n; j++) {
-          f32 new_val =
-              table_get(&aug, row, j) - factor * table_get(&aug, col, j);
-          table_set(&aug, row, j, new_val);
-        }
-      }
+      if (row == col)
+        continue;
+      f32 factor = aug_data[row * n2 + col];
+      if (fabsf(factor) < 1e-12f)
+        continue;
+      
+      f32 *target_row = aug_data + row * n2;
+      for (uint j = 0; j < n2; j++)
+        target_row[j] -= factor * pivot_row[j];
     }
   }
 
   // On recupère A⁻¹ dans la partie droite de la matrice augmentee
   Table inv = init_table(n, n);
+  f32 *restrict inv_data = inv.data;
   for (uint i = 0; i < n; i++) {
-    for (uint j = 0; j < n; j++) {
-      table_set(&inv, i, j, table_get(&aug, i, n + j));
-    }
+    f32 *src = aug_data + i * n2 + n;
+    f32 *dst = inv_data + i * n;
+    for (uint j = 0; j < n; j++)
+      dst[j] = src[j];
   }
+
   free_table(&aug);
   return inv;
 }
