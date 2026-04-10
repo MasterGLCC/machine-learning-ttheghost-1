@@ -30,6 +30,9 @@ Chaque methode de regression est implementee de deux manieres :
 ├── poly-linear-regression/
 │   ├── from-scratch/main.c                # regression polynomiale degre 2
 │   └── with-lib/
+├── logistic-regression/
+│   ├── from-scratch/main.c                # regression logistique
+│   └── with-lib/
 └── Makefile
 ```
 
@@ -42,9 +45,10 @@ Prerequis : `clang` et `make`.
 make
 
 # executer
-make run_lr     # regression lineaire
-make run_mlr    # regression multiple
-make run_plr    # regression polynomiale
+make run_lr       # regression lineaire
+make run_mlr      # regression multiple
+make run_plr      # regression polynomiale
+make run_logistic # regression logistique
 
 # nettoyer
 make clean

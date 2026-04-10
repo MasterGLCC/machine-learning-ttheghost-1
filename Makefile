@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -Wall -Wextra -std=c11 -O3 -I.
+CFLAGS = -Wall -Wextra -std=c11 -O3 -march=native -I.
 
 UNAME_S := $(shell uname -s)
 
@@ -19,18 +19,21 @@ COMMON_DIR = common
 LR_DIR = linear-regression/from-scratch
 MLR_DIR = multiple-linear-regression/from-scratch
 POLY_LR_DIR = poly-linear-regression/from-scratch
+LOGISTIC_DIR = logistic-regression/from-scratch
 
 COMMON_SRC = $(COMMON_DIR)/math.c $(COMMON_DIR)/csv.c $(COMMON_DIR)/matrix.c
 LR_SRC = $(LR_DIR)/main.c
 MLR_SRC = $(MLR_DIR)/main.c
 POLY_LR_SRC = $(POLY_LR_DIR)/main.c
+LOGISTIC_SRC = $(LOGISTIC_DIR)/main.c
 
 LR_TARGET = linear_regression$(EXT)
 MLR_TARGET = multiple_linear_regression$(EXT)
 POLY_LR_TARGET = poly_linear_regression$(EXT)
+LOGISTIC_TARGET = logistic_regression$(EXT)
 
 # Default rule
-all: $(LR_TARGET) $(MLR_TARGET) $(POLY_LR_TARGET)
+all: $(LR_TARGET) $(MLR_TARGET) $(POLY_LR_TARGET) $(LOGISTIC_TARGET)
 
 $(LR_TARGET):
 	$(CC) $(CFLAGS) $(COMMON_SRC) $(LR_SRC) -o $(LR_TARGET) $(LDFLAGS)
@@ -41,8 +44,11 @@ $(MLR_TARGET):
 $(POLY_LR_TARGET):
 	$(CC) $(CFLAGS) $(COMMON_SRC) $(POLY_LR_SRC) -o $(POLY_LR_TARGET) $(LDFLAGS)
 
+$(LOGISTIC_TARGET):
+	$(CC) $(CFLAGS) $(COMMON_SRC) $(LOGISTIC_SRC) -o $(LOGISTIC_TARGET) $(LDFLAGS)
+
 # Run
-run: run_lr run_mlr run_plr
+run: run_lr run_mlr run_plr run_logistic
 
 run_lr: $(LR_TARGET)
 	./$(LR_TARGET)
@@ -52,6 +58,9 @@ run_mlr: $(MLR_TARGET)
 
 run_plr: $(POLY_LR_TARGET)
 	./$(POLY_LR_TARGET)
+
+run_logistic: $(LOGISTIC_TARGET)
+	./$(LOGISTIC_TARGET)
 
 clean:
 	del /Q *.exe 2>nul

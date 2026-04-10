@@ -19,6 +19,3 @@ jobs:
 
     - name: Build all
       run: make
-
-    - name: Run linear regression
-      run: ./linear_regression
