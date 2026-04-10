@@ -4,7 +4,7 @@
 
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/jyj5d-5u)
 
-Ce depot contient les implementations pour la regression lineaire, multiple et polynomiale.
+Ce depot contient les implementations pour la regression lineaire, multiple, polynomiale et logistique.
 
 Chaque methode de regression est implementee de deux manieres :
 
@@ -31,8 +31,7 @@ Chaque methode de regression est implementee de deux manieres :
 │   ├── from-scratch/main.c                # regression polynomiale degre 2
 │   └── with-lib/
 ├── logistic-regression/
-│   ├── from-scratch/main.c                # regression logistique
-│   └── with-lib/
+│   └── from-scratch/main.c                # regression logistique
 └── Makefile
 ```
 
@@ -48,7 +47,7 @@ make
 make run_lr       # regression lineaire
 make run_mlr      # regression multiple
 make run_plr      # regression polynomiale
-make run_logistic # regression logistique
+make run_log      # regression logistique
 
 # nettoyer
 make clean

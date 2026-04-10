@@ -48,7 +48,7 @@ $(LOGISTIC_TARGET):
 	$(CC) $(CFLAGS) $(COMMON_SRC) $(LOGISTIC_SRC) -o $(LOGISTIC_TARGET) $(LDFLAGS)
 
 # Run
-run: run_lr run_mlr run_plr run_logistic
+run: run_lr run_mlr run_plr run_log
 
 run_lr: $(LR_TARGET)
 	./$(LR_TARGET)
@@ -59,7 +59,7 @@ run_mlr: $(MLR_TARGET)
 run_plr: $(POLY_LR_TARGET)
 	./$(POLY_LR_TARGET)
 
-run_logistic: $(LOGISTIC_TARGET)
+run_log: $(LOGISTIC_TARGET)
 	./$(LOGISTIC_TARGET)
 
 clean:
