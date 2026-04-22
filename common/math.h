@@ -48,6 +48,11 @@ Table table_extract_column(const Table *t, uint col_idx);
 Table table_extract_columns(const Table *t, uint col_start, uint col_end);
 Table table_extract_rows(const Table *t, uint row_start, uint row_end);
 
+// Manipulation de lignes
+void table_rows_swap(Table *t, uint row_a, uint row_b);
+void table_shuffle_together(Table *X, Table *y);
+Table table_combine_except(const Table *src, uint start_idx, uint end_idx);
+
 // --- Fonctions statistiques ---
 
 // Moyenne par colonne : μⱼ = (1/n) Σᵢ xᵢⱼ

@@ -93,13 +93,48 @@ Table table_extract_columns(const Table *t, uint col_start, uint col_end) {
   return sub;
 }
 
-// Extrait un intervalle de lignes [row_start, row_end[
+// Extrait un intervalle de lignes [row_start, row_end]
 Table table_extract_rows(const Table *t, uint row_start, uint row_end) {
   uint new_rows = row_end - row_start;
   Table sub = init_table(new_rows, t->cols);
   memcpy(sub.data, t->data + row_start * t->cols,
          (size_t)new_rows * t->cols * sizeof(f32));
   return sub;
+}
+
+// Permute les lignes row_a et row_b de la table t
+void table_rows_swap(Table *t, uint row_a, uint row_b) {
+    for (uint j = 0; j < t->cols; j++) {
+        f32 temp = table_get(t, row_a, j);
+        table_set(t, row_a, j, table_get(t, row_b, j));
+        table_set(t, row_b, j, temp);
+    }
+}
+
+// Mélange les lignes de X et y de manière synchronisée (utile pour le shuffle avant un train/test split)
+void table_shuffle_together(Table *X, Table *y) {
+    for (uint i = X->rows - 1; i > 0; i--) {
+        uint j = rand() % (i + 1);
+        table_rows_swap(X, i, j);
+        table_rows_swap(y, i, j);
+    }
+}
+
+// Combine les lignes de src en excluant l'intervalle [start_idx, end_idx] (utile pour le cross-validation)
+Table table_combine_except(const Table *src, uint start_idx, uint end_idx) {
+    uint val_rows = end_idx - start_idx;
+    uint train_rows = src->rows - val_rows;
+    Table out = init_table(train_rows, src->cols);
+
+    uint out_row = 0;
+    for (uint i = 0; i < src->rows; i++) {
+        if (i >= start_idx && i < end_idx) continue; // skip validation rows
+        for (uint j = 0; j < src->cols; j++) {
+            table_set(&out, out_row, j, table_get(src, i, j));
+        }
+        out_row++;
+    }
+    return out;
 }
 
 // Moyenne par colonne (axis=0) : μⱼ = (1/n) Σᵢ xᵢⱼ
