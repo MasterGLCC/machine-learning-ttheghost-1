@@ -32,6 +32,10 @@ Chaque methode de regression est implementee de deux manieres :
 │   └── with-lib/
 ├── logistic-regression/
 │   └── from-scratch/main.c                # regression logistique
+├── k-nearest-neighbors/
+│   └── from-scratch/main.c                # k plus proches voisins
+├── support-vector-machines/
+│   └── from-scratch/main.c                # machines à vecteurs de support
 └── Makefile
 ```
 
@@ -48,6 +52,8 @@ make run_lr       # regression lineaire
 make run_mlr      # regression multiple
 make run_plr      # regression polynomiale
 make run_log      # regression logistique
+make run_knn      # k-nearest neighbors
+make run_svm      # support vector machines
 
 # nettoyer
 make clean
