@@ -30,9 +30,11 @@ int compare_neighbors(const void *a, const void *b)
 f32 euclidean_distance(const Table *train_set, uint row_idx, const Table *query_point)
 {
   f32 sum = 0.0f;
+  f32 *restrict train_row = &train_set->data[row_idx * train_set->cols];
+  f32 *restrict query_row = query_point->data;
   for (uint j = 0; j < train_set->cols; j++)
   {
-    f32 diff = table_get(train_set, row_idx, j) - table_get(query_point, 0, j);
+    f32 diff = train_row[j] - query_row[j];
     sum += diff * diff;
   }
   return sqrtf(sum);
