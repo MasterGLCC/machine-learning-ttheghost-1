@@ -39,7 +39,9 @@ Chaque methode de regression est implementee de deux manieres :
 ├── decision-tree/
 │   └── from-scratch/main.c                # arbre de decision ID3
 ├── random-forest/
-│   └── from-scratch/main.c                # foret aleatoire (bagging d
+│   └── from-scratch/main.c                # foret aleatoire (bagging)
+├── xgboost/
+│   └── from-scratch/main.c                # xgboost
 └── Makefile
 ```
 
@@ -60,6 +62,7 @@ make run_knn      # k-nearest neighbors
 make run_svm      # support vector machines
 make run_dt       # decision tree
 make run_rf       # random forest
+make run_xgb      # xgboost
 
 # nettoyer
 make clean

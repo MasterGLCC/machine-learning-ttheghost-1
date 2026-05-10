@@ -24,6 +24,7 @@ KNN_DIR = k-nearest-neighbors/from-scratch
 SVM_DIR = support-vector-machines/from-scratch
 DECISION_TREE_DIR = decision-tree/from-scratch
 RANDOM_FOREST_DIR = random-forest/from-scratch
+XGBOOST_DIR = xgboost/from-scratch
 
 COMMON_SRC = $(COMMON_DIR)/math.c $(COMMON_DIR)/csv.c $(COMMON_DIR)/matrix.c
 LR_SRC = $(LR_DIR)/main.c
@@ -34,6 +35,7 @@ KNN_SRC = $(KNN_DIR)/main.c
 SVM_SRC = $(SVM_DIR)/main.c
 DECISION_TREE_SRC = $(DECISION_TREE_DIR)/main.c
 RANDOM_FOREST_SRC = $(RANDOM_FOREST_DIR)/main.c
+XGBOOST_SRC = $(XGBOOST_DIR)/main.c
 
 LR_TARGET = linear_regression$(EXT)
 MLR_TARGET = multiple_linear_regression$(EXT)
@@ -43,9 +45,10 @@ KNN_TARGET = knn$(EXT)
 SVM_TARGET = svm$(EXT)
 DECISION_TREE_TARGET = decision_tree$(EXT)
 RANDOM_FOREST_TARGET = random_forest$(EXT)
+XGBOOST_TARGET = xgboost$(EXT)
 
 # Default rule
-all: $(LR_TARGET) $(MLR_TARGET) $(POLY_LR_TARGET) $(LOGISTIC_TARGET) $(KNN_TARGET) $(SVM_TARGET) $(DECISION_TREE_TARGET) $(RANDOM_FOREST_TARGET)
+all: $(LR_TARGET) $(MLR_TARGET) $(POLY_LR_TARGET) $(LOGISTIC_TARGET) $(KNN_TARGET) $(SVM_TARGET) $(DECISION_TREE_TARGET) $(RANDOM_FOREST_TARGET) $(XGBOOST_TARGET)
 
 $(LR_TARGET):
 	$(CC) $(CFLAGS) $(COMMON_SRC) $(LR_SRC) -o $(LR_TARGET) $(LDFLAGS)
@@ -71,8 +74,11 @@ $(DECISION_TREE_TARGET):
 $(RANDOM_FOREST_TARGET):
 	$(CC) $(CFLAGS) $(COMMON_SRC) $(RANDOM_FOREST_SRC) -o $(RANDOM_FOREST_TARGET) $(LDFLAGS)
 
+$(XGBOOST_TARGET):
+	$(CC) $(CFLAGS) $(COMMON_SRC) $(XGBOOST_SRC) -o $(XGBOOST_TARGET) $(LDFLAGS)
+
 # Run
-run: run_lr run_mlr run_plr run_log run_knn run_svm run_dt run_rf
+run: run_lr run_mlr run_plr run_log run_knn run_svm run_dt run_rf run_xgb
 
 run_lr: $(LR_TARGET)
 	./$(LR_TARGET)
@@ -97,6 +103,9 @@ run_dt: $(DECISION_TREE_TARGET)
 
 run_rf: $(RANDOM_FOREST_TARGET)
 	./$(RANDOM_FOREST_TARGET)
+
+run_xgb: $(XGBOOST_TARGET)
+	./$(XGBOOST_TARGET)
 
 clean:
 	del /Q *.exe 2>nul
