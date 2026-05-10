@@ -46,6 +46,8 @@ Chaque methode de regression est implementee de deux manieres :
 │   └── from-scratch/main.c                # dbscan
 ├── naive-bayes/
 │   └── from-scratch/main.c                # naive bayes
+├── q-learning/
+│   └── from-scratch/main.c                # q-learning
 └── Makefile
 ```
 
@@ -69,6 +71,7 @@ make run_rf       # random forest
 make run_xgb      # xgboost
 make run_dbscan   # dbscan
 make run_nb       # naive bayes
+make run_ql       # q-learning
 
 # nettoyer
 make clean
