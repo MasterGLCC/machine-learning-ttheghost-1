@@ -182,3 +182,29 @@ int main() {
 
   return 0;
 }
+
+// --- Affichage du code ---
+
+// --- DBSCAN (Clustering Spatial Base sur la Densite) ---
+// Charge 'datasets/dbscan_data.csv': 14 lignes x 2 colonnes
+// Dataset charge : 14 points.
+// Parametres : Epsilon = 0.50, MinPts = 3
+
+// DBSCAN termine. Nombre de clusters trouves : 2
+
+// Resultats du Clustering :
+// Point  0 (1.0, 1.0) : Cluster 1
+// Point  1 (1.1, 1.1) : Cluster 1
+// Point  2 (0.9, 1.0) : Cluster 1
+// Point  3 (1.0, 0.9) : Cluster 1
+// Point  4 (0.9, 0.9) : Cluster 1
+// Point  5 (1.1, 0.9) : Cluster 1
+// Point  6 (5.0, 5.0) : Cluster 2
+// Point  7 (5.1, 5.1) : Cluster 2
+// Point  8 (4.9, 5.0) : Cluster 2
+// Point  9 (5.0, 4.9) : Cluster 2
+// Point 10 (4.9, 4.9) : Cluster 2
+// Point 11 (5.1, 4.9) : Cluster 2
+// Point 12 (8.0, 1.0) : Bruit
+// Point 13 (1.0, 8.0) : Bruit
+// Points classes comme bruit : 2
