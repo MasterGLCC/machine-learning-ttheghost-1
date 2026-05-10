@@ -1,4 +1,8 @@
 /**
+ * Mohammed IFKIRNE
+ */
+
+/**
  * Implementation de l'Arbre de Decision (Algorithme ID3)
  *
  * L'algorithme ID3 (Iterative Dichotomiser 3) construit un arbre de decision

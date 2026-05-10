@@ -1,4 +1,8 @@
 /**
+ * Mohammed IFKIRNE
+ */
+
+/**
  * Implementation de la Foret Aleatoire (Random Forest - Bootstrap Aggregating)
  *
  * Le principe du Bootstrap Aggregating (Bagging) est d'entrainer de multiples

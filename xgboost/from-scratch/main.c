@@ -1,4 +1,8 @@
 /**
+ * Mohammed IFKIRNE
+ */
+
+/**
  * Implementation Simplifiee de XGBoost (Gradient Boosting)
  * 
  * Cet algorithme construit une serie d'arbres de regression qui corrigent
