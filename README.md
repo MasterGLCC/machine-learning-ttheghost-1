@@ -42,6 +42,8 @@ Chaque methode de regression est implementee de deux manieres :
 │   └── from-scratch/main.c                # foret aleatoire (bagging)
 ├── xgboost/
 │   └── from-scratch/main.c                # xgboost
+├── dbscan/
+│   └── from-scratch/main.c                # dbscan
 └── Makefile
 ```
 
@@ -63,6 +65,7 @@ make run_svm      # support vector machines
 make run_dt       # decision tree
 make run_rf       # random forest
 make run_xgb      # xgboost
+make run_dbscan   # dbscan
 
 # nettoyer
 make clean
