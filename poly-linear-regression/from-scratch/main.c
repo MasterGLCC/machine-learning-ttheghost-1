@@ -2,7 +2,7 @@
  * Mohammed IFKIRNE
  */
 
- #include <common/csv.h>
+#include <common/csv.h>
 #include <common/math.h>
 #include <math.h>
 #include <stdio.h>
@@ -141,7 +141,8 @@ int main() {
   f32 x_norm = (new_x - mean_x) / std_x;
   f32 pred_norm = model.w0 + model.w1 * x_norm + model.w2 * (x_norm * x_norm);
   f32 pred_orig = pred_norm * std_y + mean_y;
-  printf("Prediction pour taille=%.1f pouces: poids=%.2f lbs\n", new_x, pred_orig);
+  printf("Prediction pour taille=%.1f pouces: poids=%.2f lbs\n", new_x,
+         pred_orig);
 
   // Nettoyage
   free_table(&X);
