@@ -48,6 +48,8 @@ Chaque methode de regression est implementee de deux manieres :
 │   └── from-scratch/main.c                # naive bayes
 ├── q-learning/
 │   └── from-scratch/main.c                # q-learning
+├── pca/
+│   └── from-scratch/main.c                # pca (analyse en composantes principales)
 └── Makefile
 ```
 
@@ -72,6 +74,7 @@ make run_xgb      # xgboost
 make run_dbscan   # dbscan
 make run_nb       # naive bayes
 make run_ql       # q-learning
+make run_pca      # pca
 
 # nettoyer
 make clean

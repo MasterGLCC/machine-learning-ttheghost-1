@@ -28,6 +28,7 @@ XGBOOST_DIR = xgboost/from-scratch
 DBSCAN_DIR = dbscan/from-scratch
 NAIVE_BAYES_DIR = naive-bayes/from-scratch
 Q_LEARNING_DIR = q-learning/from-scratch
+PCA_DIR = pca/from-scratch
 
 COMMON_SRC = $(COMMON_DIR)/math.c $(COMMON_DIR)/csv.c $(COMMON_DIR)/matrix.c
 LR_SRC = $(LR_DIR)/main.c
@@ -42,6 +43,7 @@ XGBOOST_SRC = $(XGBOOST_DIR)/main.c
 DBSCAN_SRC = $(DBSCAN_DIR)/main.c
 NAIVE_BAYES_SRC = $(NAIVE_BAYES_DIR)/main.c
 Q_LEARNING_SRC = $(Q_LEARNING_DIR)/main.c
+PCA_SRC = $(PCA_DIR)/main.c
 
 LR_TARGET = linear_regression$(EXT)
 MLR_TARGET = multiple_linear_regression$(EXT)
@@ -55,9 +57,10 @@ XGBOOST_TARGET = xgboost$(EXT)
 DBSCAN_TARGET = dbscan$(EXT)
 NAIVE_BAYES_TARGET = naive_bayes$(EXT)
 Q_LEARNING_TARGET = q_learning$(EXT)
+PCA_TARGET = pca$(EXT)
 
 # Default rule
-all: $(LR_TARGET) $(MLR_TARGET) $(POLY_LR_TARGET) $(LOGISTIC_TARGET) $(KNN_TARGET) $(SVM_TARGET) $(DECISION_TREE_TARGET) $(RANDOM_FOREST_TARGET) $(XGBOOST_TARGET) $(DBSCAN_TARGET) $(NAIVE_BAYES_TARGET) $(Q_LEARNING_TARGET)
+all: $(LR_TARGET) $(MLR_TARGET) $(POLY_LR_TARGET) $(LOGISTIC_TARGET) $(KNN_TARGET) $(SVM_TARGET) $(DECISION_TREE_TARGET) $(RANDOM_FOREST_TARGET) $(XGBOOST_TARGET) $(DBSCAN_TARGET) $(NAIVE_BAYES_TARGET) $(Q_LEARNING_TARGET) $(PCA_TARGET)
 
 $(LR_TARGET):
 	$(CC) $(CFLAGS) $(COMMON_SRC) $(LR_SRC) -o $(LR_TARGET) $(LDFLAGS)
@@ -95,8 +98,11 @@ $(NAIVE_BAYES_TARGET):
 $(Q_LEARNING_TARGET):
 	$(CC) $(CFLAGS) $(COMMON_SRC) $(Q_LEARNING_SRC) -o $(Q_LEARNING_TARGET) $(LDFLAGS)
 
+$(PCA_TARGET):
+	$(CC) $(CFLAGS) $(COMMON_SRC) $(PCA_SRC) -o $(PCA_TARGET) $(LDFLAGS)
+
 # Run
-run: run_lr run_mlr run_plr run_log run_knn run_svm run_dt run_rf run_xgb run_dbscan run_nb run_ql
+run: run_lr run_mlr run_plr run_log run_knn run_svm run_dt run_rf run_xgb run_dbscan run_nb run_ql run_pca
 
 run_lr: $(LR_TARGET)
 	./$(LR_TARGET)
@@ -133,6 +139,9 @@ run_nb: $(NAIVE_BAYES_TARGET)
 
 run_ql: $(Q_LEARNING_TARGET)
 	./$(Q_LEARNING_TARGET)
+
+run_pca: $(PCA_TARGET)
+	./$(PCA_TARGET)
 
 clean:
 	del /Q *.exe 2>nul
