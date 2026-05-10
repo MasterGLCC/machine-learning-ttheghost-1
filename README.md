@@ -36,6 +36,10 @@ Chaque methode de regression est implementee de deux manieres :
 │   └── from-scratch/main.c                # k plus proches voisins
 ├── support-vector-machines/
 │   └── from-scratch/main.c                # machines à vecteurs de support
+├── decision-tree/
+│   └── from-scratch/main.c                # arbre de decision ID3
+├── random-forest/
+│   └── from-scratch/main.c                # foret aleatoire (bagging d
 └── Makefile
 ```
 
@@ -54,6 +58,8 @@ make run_plr      # regression polynomiale
 make run_log      # regression logistique
 make run_knn      # k-nearest neighbors
 make run_svm      # support vector machines
+make run_dt       # decision tree
+make run_rf       # random forest
 
 # nettoyer
 make clean
