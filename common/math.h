@@ -46,6 +46,7 @@ void table_print_head(const Table *t, uint n, const char *name);
 // Extraction de sous-ensembles
 Table table_extract_column(const Table *t, uint col_idx);
 Table table_extract_columns(const Table *t, uint col_start, uint col_end);
+Table table_extract_row(const Table *t, uint row_idx);
 Table table_extract_rows(const Table *t, uint row_start, uint row_end);
 
 // Manipulation de lignes
@@ -78,3 +79,6 @@ void table_normlize_zscore_axis0(Table *X, const Table *mean,
 // Denormalisation : x = x' · σ + μ
 void table_denormalize_zscore_axis0(Table *X, const Table *mean,
                                     const Table *stddev);
+                  
+// La somme de tous les éléments d'une table
+f32 table_sum(const Table *t);

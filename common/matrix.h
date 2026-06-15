@@ -1,6 +1,11 @@
 #pragma once
 #include "math.h"
 
+// Additions
+Table table_add(const Table *A, const Table *B);
+Table table_sub(const Table *A, const Table *B);
+Table table_div_scalar(const Table *A, f32 scalar);
+
 // Transposee : Aᵀ
 Table matrix_transpose(const Table *A);
 

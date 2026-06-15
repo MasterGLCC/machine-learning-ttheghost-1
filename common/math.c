@@ -93,6 +93,15 @@ Table table_extract_columns(const Table *t, uint col_start, uint col_end) {
   return sub;
 }
 
+// Extrait une seule ligne -> table de dimension (1, m)
+Table table_extract_row(const Table *t, uint row_idx) {
+  Table row = init_table(1, t->cols);
+  for (uint j = 0; j < t->cols; j++) {
+    table_set(&row, 0, j, table_get(t, row_idx, j));
+  }
+  return row;
+}
+
 // Extrait un intervalle de lignes [row_start, row_end]
 Table table_extract_rows(const Table *t, uint row_start, uint row_end) {
   uint new_rows = row_end - row_start;
@@ -251,4 +260,13 @@ void table_denormalize_zscore_axis0(Table *X, const Table *mean,
       table_set(X, i, j, (sigma * val) + mu);
     }
   }
+}
+
+// La somme de tous les éléments d'une table
+f32 table_sum(const Table *t) {
+  f32 sum = 0.0f;
+  for (uint i = 0; i < t->rows * t->cols; i++) {
+    sum += t->data[i];
+  }
+  return sum;
 }
