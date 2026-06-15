@@ -7,17 +7,18 @@
 
 typedef struct
 {
-  // weights : n lignes, 1 colonne (poids pour chaque feature)
+  // Poids du modele : W de dimension (n_features, 1)
   Table weights;
   f32 bias;
 } Perceptron;
 
+// Fonction d'activation sigmoide : σ(z) = 1 / (1 + e⁻ᶻ)
 f32 sigmoid(f32 x)
 {
   return 1.0f / (1.0f + expf(-x));
 }
 
-// input : 1 ligne, n colonnes (features)
+// Prediction du modele pour une entree x : ŷ = σ(∑ (w_j * x_j) + b)
 f32 model_predict(Perceptron *model, Table *input)
 {
   f32 sum = model->bias;
@@ -30,8 +31,8 @@ f32 model_predict(Perceptron *model, Table *input)
   return sigmoid(sum);
 }
 
-// input : n lignes, m colonnes (features)
-// return : n lignes, 1 colonne (predictions)
+// Predictions pour un lot d'entrees X : Y_pred = σ(X·W + b)
+// Retourne un tableau de dimension (n_echantillons, 1)
 Table batch_model_predict(Perceptron *model, Table *input)
 {
   Table output = init_table(input->rows, 1);
@@ -45,25 +46,26 @@ Table batch_model_predict(Perceptron *model, Table *input)
   return output;
 }
 
-// X : n lignes, m colonnes (features)
-// y : n lignes, 1 colonne (labels)
+// Entrainement par descente de gradient avec perte d'entropie croisee binaire
+// Perte : L = -1/N * ∑ [ y_i * log(ŷ_i) + (1 - y_i) * log(1 - ŷ_i) ]
+// Gradients : ∂L/∂W = 1/N * Xᵀ · (ŷ - y) et ∂L/∂b = 1/N * ∑ (ŷ_i - y_i)
 void train_model(Perceptron *model, Table *X, Table *y, f32 lr, uint epochs)
 {
   for (size_t epoch = 0; epoch < epochs; epoch++)
   {
-    // Forward pass: pred = sigmoid(XW + b)
+    // Etape de propagation avant : ŷ = σ(X·W + b)
     Table pred = batch_model_predict(model, X);
 
-    // Error = pred - y
+    // Calcul de l'erreur : e = ŷ - y
     Table error = table_sub(&pred, y);
 
-    // Transforme X (n×m) en XT (m×n) pour faire le produit matriciel dW = XT · error
+    // Calcul du gradient moyen des poids et du biais par rapport a la perte L
     Table XT = matrix_transpose(X);
     Table _dW = matrix_multiply(&XT, &error);
     Table dW = table_div_scalar(&_dW, (f32)X->rows);
     f32 db = table_sum(&error) / (f32)X->rows;
 
-    // Mise à jour des poids et du biais : W = W - lr * dW, b = b - lr * db
+    // Mise a jour des parametres : W = W - α * ∂L/∂W et b = b - α * ∂L/∂b
     for (uint i = 0; i < model->weights.rows; i++)
     {
       f32 w = table_get(&model->weights, i, 0);
@@ -90,13 +92,13 @@ int main()
   printf("Dataset charge : %u echantillons, %u features.\n", X.rows, X.cols);
 
   Perceptron model = {
-    .weights = init_table_with(X.cols, 1, 0), // initialisation des poids a 0
+    .weights = init_table_with(X.cols, 1, 0), // Initialisation des poids W a zero
     .bias = 0.0f
   };
 
   train_model(&model, &X, &y, 0.1f, 1000);
 
-  // Affichage des predictions
+  // Affichage des predictions finales
   for (uint i = 0; i < X.rows; i++) {
     Table input_row = table_extract_row(&X, i);
     f32 pred = model_predict(&model, &input_row);
@@ -112,7 +114,7 @@ int main()
   return 0;
 }
 
-// Affichage du code:
+// Affichage attendu :
 
 // -- Perceptron --
 // Charge 'datasets/perceptron_data.csv': 5 lignes x 3 colonnes
