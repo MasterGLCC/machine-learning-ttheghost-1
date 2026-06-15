@@ -111,3 +111,14 @@ int main()
   free_table(&data);
   return 0;
 }
+
+// Affichage du code:
+
+// -- Perceptron --
+// Charge 'datasets/perceptron_data.csv': 5 lignes x 3 colonnes
+// Dataset charge : 5 echantillons, 2 features.
+// Echantillon  0 : Vraie Classe = 0, Prediction = 0.1145
+// Echantillon  1 : Vraie Classe = 0, Prediction = 0.1145
+// Echantillon  2 : Vraie Classe = 1, Prediction = 0.9698
+// Echantillon  3 : Vraie Classe = 1, Prediction = 0.9698
+// Echantillon  4 : Vraie Classe = 1, Prediction = 0.9078
